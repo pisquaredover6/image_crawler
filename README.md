@@ -6,4 +6,5 @@ http://somewebsrv.com/img/992147.jpg
 
 The script takes this plaintext file as an argument and downloads all images, storing them on the local hard disk
 
-Call the script like: ` python image_crawler path/to/urllist.txt` 
+To store all images in a local folder "output", call the script like: ` python image_crawler path/to/urllist.txt`
+To save images in other directory, call script like: ` python image_crawler path/to/urllist.txt path/to/outpt_directory` 

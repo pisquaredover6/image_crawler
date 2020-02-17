@@ -84,4 +84,7 @@ def crawl_images(input_file, output_directory='output'):
 
 
 if __name__ == '__main__':
-    crawl_images(input_file=sys.argv[1])
+    if len(sys.argv) == 2:
+        crawl_images(input_file=sys.argv[1])
+    elif len(sys.argv) == 3:
+        crawl_images(input_file=sys.argv[1], output_directory=sys.argv[2])
