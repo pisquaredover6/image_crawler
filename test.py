@@ -22,9 +22,9 @@ class MyTestCase(unittest.TestCase):
         crawl_images(input_file=self.input_file, output_directory=self.output_directory)
         num_of_images = len(os.listdir(self.output_directory))
         self.assertEqual(
-            3,
+            5,
             num_of_images,
-            'Number of received images should be {}, was {}!'.format(28, num_of_images)
+            'Number of received images should be {}, was {}!'.format(5, num_of_images)
         )
 
     def test_make_filename(self):
@@ -45,6 +45,16 @@ class MyTestCase(unittest.TestCase):
         filename = make_filename(self.output_directory, file_extension, url)
         filename_solution = '{}/992147.png'.format(self.output_directory)
         self.assertEqual(filename_solution, filename, 'Image file name is wrong!')
+
+        # create files to check if duplicates are avoided properly
+        open('{}/24174.jpg'.format(self.output_directory), 'x').close()
+        open('{}/24174_(1).jpg'.format(self.output_directory), 'x').close()
+
+        url = 'http://mywebserver.com/images/24174'
+        file_extension = 'jpg'
+        filename = make_filename(self.output_directory, file_extension, url)
+        filename_solution = '{}/24174_(2).jpg'.format(self.output_directory)
+        self.assertEqual(filename_solution, filename, 'Image file name is wrong! Check extension')
 
 
 if __name__ == '__main__':
