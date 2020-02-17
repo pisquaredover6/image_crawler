@@ -14,7 +14,7 @@ logging.basicConfig(
     datefmt="%H:%M:%S",
     stream=sys.stderr,
 )
-logger = logging.getLogger('')
+logger = logging.getLogger('image_crawler')
 
 
 def make_filename(output_directory, file_extension, url):
