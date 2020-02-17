@@ -31,17 +31,14 @@ def make_filename(output_directory, file_extension, url):
     """
     filename = '{}/{}'.format(output_directory, url.rsplit('/', 1)[1])
     try:
-        filepath, extension = filename.rsplit('.')
-        assert extension == file_extension
+        image_name, extension = filename.rsplit('.')
     except ValueError:
-        filename = '{}.{}'.format(filename, file_extension)
-    except AssertionError:
-        filename = '{}.{}'.format(filepath, file_extension)
+        image_name = filename
+    filename = '{}.{}'.format(image_name, file_extension)
     filename_counter = 1
     # if filename is already taken, attach a number (counting up) until we find a free name
     while path.exists(filename):
-        filepath, extension = filename.rsplit('.')
-        filename = '{}_({}).{}'.format(filepath, filename_counter, extension)
+        filename = '{}_({}).{}'.format(image_name, filename_counter, file_extension)
         filename_counter += 1
     return filename
 
