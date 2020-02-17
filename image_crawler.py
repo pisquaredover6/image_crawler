@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+
+"""fetch images from a plaintext file list and store them on harddrive"""
+
 import imghdr
 import logging
 import requests
@@ -12,6 +15,35 @@ logging.basicConfig(
     stream=sys.stderr,
 )
 logger = logging.getLogger('')
+
+
+def make_filename(output_directory, file_extension, url):
+    """
+    Create filename for image by using last part of url (after last '/').
+    Make sure file ends with proper file extension.
+    Check if filename already exists in folder.
+    If yes, append counter and count up until filename is available
+    (e.g. output_dir/image.jpg, output_dir/image_(1).jpg, output_dir/image_(2).jpg)
+    :param output_directory: path to output directory
+    :param file_extension: image file extension (e.g. jpeg, png)
+    :param url: url to image
+    :return: filename (e.g. output_dir/image.jpg )
+    """
+    filename = '{}/{}'.format(output_directory, url.rsplit('/', 1)[1])
+    try:
+        filepath, extension = filename.rsplit('.')
+        assert extension == file_extension
+    except ValueError:
+        filename = '{}.{}'.format(filename, file_extension)
+    except AssertionError:
+        filename = '{}.{}'.format(filepath, file_extension)
+    filename_counter = 1
+    # if filename is already taken, attach a number (counting up) until we find a free name
+    while path.exists(filename):
+        filepath, extension = filename.rsplit('.')
+        filename = '{}_({}).{}'.format(filepath, filename_counter, extension)
+        filename_counter += 1
+    return filename
 
 
 def crawl_images(input_file, output_directory='output'):
@@ -41,20 +73,7 @@ def crawl_images(input_file, output_directory='output'):
                 if not file_extension:
                     logger.error('Not an image file - ignoring: {}'.format(url))
                 else:
-                    filename = '{}/{}'.format(output_directory, url.rsplit('/', 1)[1])
-                    try:
-                        filepath, extension = filename.rsplit('.')
-                        assert extension == file_extension
-                    except ValueError:
-                        filename = '{}.{}'.format(filename, file_extension)
-                    except AssertionError:
-                        filename = '{}.{}'.format(filepath, file_extension)
-                    filename_counter = 1
-                    # if filename is already taken, attatch a number (counting up) until we find a free name
-                    while path.exists(filename):
-                        filepath, extension = filename.rsplit('.')
-                        filename = '{}_({}).{}'.format(filepath, filename_counter, extension)
-                        filename_counter += 1
+                    filename = make_filename(output_directory, file_extension, url)
                     with open(filename, 'wb') as image_file:
                         image_file.write(image_request.content)
                     saved_images_counter += 1
